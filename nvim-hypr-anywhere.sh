@@ -28,7 +28,7 @@ chmod og-rwx "$TMPFILE"
 # you probably want to type stright away, so start at insert
 #
 # also, once you save it, it exits
-alacritty -o 'font.size=25' --class nvim-hypr-anywhere -e nvim +startinsert +'autocmd BufWritePost <buffer> quit' "$TMPFILE"
+alacritty -o "font.size=$FONT_SIZE" --class nvim-hypr-anywhere -e nvim +startinsert +'autocmd BufWritePost <buffer> quit' "$TMPFILE"
 
 TEXT=$(<"$TMPFILE")
 
