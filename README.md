@@ -27,8 +27,12 @@ chmod +x nvim-hypr-anywhere.sh
   - Remove the `uwsm` if you don't use it
   - Change the font size if needed, the default is 25
 
+  The second argument lets you choose which terminal to use.
+
+  The third argument allows you to pass additional options to that terminal, such as command-line flags, the class name, or other configuration parameters.
+
 ```bash
-bind = SUPER, N, exec, pkill nvim-hypr-anywhere || uwsm app -- /path/to/nvim-hypr-anywhere.sh 25
+bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh 25
 ```
 
 - Update the rules
