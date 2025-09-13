@@ -8,20 +8,20 @@ It opens a temporary **Neovim** buffer, lets you type text, and automatically co
 
 ## Installation
 
-- clone the repo
+- Clone the repo
 
 ```bash
 git clone https://github.com/abdullah-albanna/nvim-hypr-anywhere.git
 cd nvim-hypr-anywhere
 ```
 
-- make the script executable
+- Make the script executable
 
 ```bash
 chmod +x nvim-hypr-anywhere.sh
 ```
 
-- bind it to a Hyprland key
+- Bind it to a Hyprland key
   - Pick a key combination that works for you.
   - Update the script path to wherever you saved `nvim-hypr-anywhere.sh`.
   - Remove the `uwsm` if you don't use it
@@ -30,4 +30,15 @@ chmod +x nvim-hypr-anywhere.sh
 
 ```bash
 bind = SUPER, N, exec, pkill nvim-hypr-anywhere || (uwsm app -- alacritty -o 'font.size=25' --class nvim-hypr-anywhere -e path/to/nvim-anywhere.sh && hyprctl dispatch sendshortcut "CTRL,V," )
+```
+
+- Update the rules
+
+This is not necessary, but it's nice
+
+```bash
+windowrulev2 = float, class:nvim-hypr-anywhere
+windowrulev2 = pin, class:nvim-hypr-anywhere
+windowrulev2 = stayfocused, class:nvim-hypr-anywhere
+windowrulev2 = size 70% 70%, class:nvim-hypr-anywhere
 ```
