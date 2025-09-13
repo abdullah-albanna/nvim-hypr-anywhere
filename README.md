@@ -1,43 +1,47 @@
 # nvim-hypr-anywhere
 
-Edit text anywhere on Wayland using Neovim, then quickly paste it into any text field via Hyprland dispatch.
+Edit text anywhere on **Wayland** using **Neovim**, then paste it into any text field via **wtype**.
 
-**nvim-hypr-anywhere** is inspired by [vim-anywhere](https://github.com/cknadler/vim-anywhere) but built specifically for **Neovim** and **Hyprland**.
+Inspired by [vim-anywhere](https://github.com/cknadler/vim-anywhere), but tailored specifically for **Neovim** + **Hyprland**.
 
-It opens a temporary **Neovim** buffer, lets you type text, then it pastes it into the currently focused text field.
+---
+
+## Features
+
+- Launch a temporary **Neovim** buffer from anywhere.
+- Automatically paste text into the currently focused text field.
+- Supports optional file extensions (to get syntax highlighting).
+
+---
 
 ## Installation
-
-- Clone the repo
 
 ```bash
 git clone https://github.com/abdullah-albanna/nvim-hypr-anywhere.git
 cd nvim-hypr-anywhere
-```
-
-- Make the script executable
-
-```bash
 chmod +x nvim-hypr-anywhere.sh
 ```
 
-- Bind it to a Hyprland key
-  - Pick a key combination that works for you.
-  - Update the script path to wherever you saved `nvim-hypr-anywhere.sh`.
-  - Remove the `uwsm` if you don't use it
-  - Change the font size if needed, the default is 25
+---
 
-  The second argument lets you choose which terminal to use.
+## Usage
 
-  The third argument allows you to pass additional options to that terminal, such as command-line flags, the class name, or other configuration parameters.
+Bind the script to a Hyprland key combination.
 
 ```bash
-bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh 25
+bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh --font-size 25
 ```
 
-- Update the rules
+### Command-line Options
 
-This is not necessary, but it's nice
+- `--ask-ext` → Prompt for a file extension when creating a temporary buffer.
+- `--font-size <size>` → Set the terminal font size (default: 25).
+- `--term <terminal>` → Choose a terminal emulator (default: alacritty).
+- `--term-opts <opts>` → Pass additional terminal options, such as class or flags.
+
+---
+
+## Hyprland Window Rules (Optional)
 
 ```bash
 windowrulev2 = float, class:nvim-hypr-anywhere
@@ -45,3 +49,26 @@ windowrulev2 = pin, class:nvim-hypr-anywhere
 windowrulev2 = stayfocused, class:nvim-hypr-anywhere
 windowrulev2 = size 70% 70%, class:nvim-hypr-anywhere
 ```
+
+These rules make the temporary Neovim window float, pin, and stay focused for a better workflow.
+
+---
+
+## Dependencies
+
+Make sure the following commands are installed:
+
+- `nvim` (Neovim)
+- `alacritty` (or your chosen terminal)
+- `wofi` (for optional extension prompt)
+- `wtype` (for pasting text)
+
+```bash
+sudo pacman -S neovim alacritty wofi wtype
+```
+
+---
+
+## License
+
+MIT
