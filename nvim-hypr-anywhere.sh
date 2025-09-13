@@ -1,6 +1,21 @@
 #!/bin/bash
 
 FONT_SIZE="${1:-25}"
+TERMINAL="${2:-alacritty}"
+TERMINAL_OPTS=${3:-"-o font.size=$FONT_SIZE --class nvim-hypr-anywhere -e"}
+
+FOUND_PREVOIUS=false
+
+while read -r pid cmd; do
+	if [[ "$cmd" == "$TERMINAL"* ]]; then
+		kill -9 "$pid"
+		FOUND_PREVOIUS=true
+	fi
+done < <(pgrep -af nvim-hypr-anywhere)
+
+if $FOUND_PREVOIUS; then
+	exit 1
+fi
 
 check_deps() {
 	for cmd in wtype nvim alacritty; do
@@ -28,7 +43,7 @@ chmod og-rwx "$TMPFILE"
 # you probably want to type stright away, so start at insert
 #
 # also, once you save it, it exits
-alacritty -o "font.size=$FONT_SIZE" --class nvim-hypr-anywhere -e nvim +startinsert +'autocmd BufWritePost <buffer> quit' "$TMPFILE"
+$TERMINAL $TERMINAL_OPTS nvim +startinsert +'autocmd BufWritePost <buffer> quit' "$TMPFILE"
 
 TEXT=$(<"$TMPFILE")
 
