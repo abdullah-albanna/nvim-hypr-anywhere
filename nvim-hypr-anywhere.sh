@@ -1,8 +1,9 @@
 #!/bin/bash
-set -euo pipefail
+
+FONT_SIZE="${1:-25}"
 
 check_deps() {
-	for cmd in wl-copy nvim; do
+	for cmd in wtype nvim alacritty; do
 		if ! command -v "$cmd" &>/dev/null; then
 			echo "Error: $cmd is required but not installed."
 			exit 1
@@ -27,13 +28,15 @@ chmod og-rwx "$TMPFILE"
 # you probably want to type stright away, so start at insert
 #
 # also, once you save it, it exits
-nvim +startinsert +'autocmd BufWritePost <buffer> quit' "$TMPFILE"
+alacritty -o 'font.size=25' --class nvim-hypr-anywhere -e nvim +startinsert +'autocmd BufWritePost <buffer> quit' "$TMPFILE"
 
 TEXT=$(<"$TMPFILE")
 
 # skip if it's empty
-if [[ -n "$TEXT" ]]; then
-	echo "$TEXT" | wl-copy
+if [ -n "$TEXT" ]; then
+	echo -n "$TEXT" | wtype -
+else
+	exit 1
 fi
 
 # if you want to delete it once done with it
