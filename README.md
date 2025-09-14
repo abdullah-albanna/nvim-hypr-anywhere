@@ -1,5 +1,7 @@
 # nvim-hypr-anywhere
 
+![showcase](assets/showcase.gif)
+
 Edit text anywhere on **Wayland** using **Neovim**, then paste it into any text field via **wtype**.
 
 Inspired by [vim-anywhere](https://github.com/cknadler/vim-anywhere), but tailored specifically for **Neovim** + **Hyprland**.
