@@ -37,6 +37,7 @@ bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh --font-size 25
 ### Command-line Options
 
 - `--ask-ext` → Prompt for a file extension when creating a temporary buffer.
+- `--rm-tmp` → Remove the just created temporary file once done with it.
 - `--font-size <size>` → Set the terminal font size (default: 25).
 - `--term <terminal>` → Choose a terminal emulator (default: alacritty).
 - `--term-opts <opts>` → Pass additional terminal options, such as class or flags.

@@ -4,6 +4,7 @@ set -euo pipefail
 
 TERM_CLASS="nvim-hypr-anywhere"
 ASK_EXT=false
+REMOVE_TMP=false
 FONT_SIZE=25
 TERM="alacritty"
 TERM_OPTS="-o font.size=$FONT_SIZE --class $TERM_CLASS -e"
@@ -49,6 +50,11 @@ parse_args() {
     case "$1" in
     --ask-ext)
       ASK_EXT=true
+      shift
+      ;;
+
+    --rm-tmp)
+      REMOVE_TMP=true
       shift
       ;;
     --font-size)
@@ -109,5 +115,6 @@ else
   exit 1
 fi
 
-# Optional: remove the temporary file
-#rm -rf "$TMPFILE"
+if $REMOVE_TMP; then
+  rm -rf "$TMPFILE"
+fi
