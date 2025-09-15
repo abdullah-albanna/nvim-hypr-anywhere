@@ -49,6 +49,9 @@ bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh --font-size 25
 - `--rm-tmp`  
   Automatically delete the temporary file after use instead of leaving it in `/tmp/nvim-hypr-anywhere`.
 
+- `--copy-selected`
+  Copy the currently selected text with Ctrl + C and start editing it
+
 - `--wtype-mode`  
   Switches from clipboard-paste to **direct keystroke mode** using `wtype`.  
   - Useful in cases where pasting is blocked, unreliable, or when working inside apps that don’t accept clipboard input. (e.g: a Terminal; because they take a CTRL+SHIFT+V)

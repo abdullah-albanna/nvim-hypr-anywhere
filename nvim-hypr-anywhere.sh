@@ -5,6 +5,7 @@ set -euo pipefail
 ASK_EXT=false
 REMOVE_TMP=false
 WTYPE_MODE=false
+COPY_SELECTED=true
 
 FONT_SIZE=25
 TERM_CLASS="nvim-hypr-anywhere"
@@ -72,6 +73,11 @@ parse_args() {
       shift
       ;;
 
+    --copy-selected)
+      COPY_SELECTED=true
+      shift
+      ;;
+
     --font-size)
       if [[ $# -ge 2 && $2 != --* ]]; then
         FONT_SIZE="$2"
@@ -117,7 +123,7 @@ fi
 
 create_tmpfile
 
-if ! $WTYPE_MODE; then
+if $COPY_SELECTED; then
 
   # get the currently selected and edit it if it's different from the last copy
   #
