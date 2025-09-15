@@ -14,11 +14,15 @@ TERM_OPTS="-o font.size=$FONT_SIZE --class $TERM_CLASS -e"
 TMPFILE_DIR="/tmp/nvim-hypr-anywhere"
 
 check_deps() {
-  local deps=("nvim" "alacritty" "wofi", "wl-clipboard")
+  local deps=("nvim" "alacritty" "wofi")
 
   # Add wtype only if WTYPE_MODE is enabled
   if $WTYPE_MODE; then
     deps+=("wtype")
+  fi
+
+  if ! $WTYPE_MODE || $COPY_SELECTED; then
+    deps+=("wl-paste" "wl-copy")
   fi
 
   for cmd in "${deps[@]}"; do
