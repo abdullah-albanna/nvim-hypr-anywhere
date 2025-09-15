@@ -24,9 +24,9 @@ This tool is inspired by [vim-anywhere](https://github.com/cknadler/vim-anywhere
 ## Installation
 
 ```bash
-git clone https://github.com/abdullah-albanna/nvim-hypr-anywhere.git
-cd nvim-hypr-anywhere
-chmod +x nvim-hypr-anywhere.sh
+git clone https://github.com/abdullah-albanna/nvim-wl-anywhere.git
+cd nvim-wl-anywhere
+chmod +x nvim-wl-anywhere.sh
 ```
 
 ---
@@ -38,7 +38,7 @@ chmod +x nvim-hypr-anywhere.sh
 Bind the script to a Hyprland key combination (example below with `SUPER+N`):
 
 ```bash
-bind = SUPER, N, exec, /path/to/nvim-hypr-anywhere.sh
+bind = SUPER, N, exec, /path/to/nvim-wl-anywhere.sh
 ```
 
 ---
@@ -48,10 +48,10 @@ bind = SUPER, N, exec, /path/to/nvim-hypr-anywhere.sh
 For a smoother workflow, add window rules to make the editor float and stay focused:
 
 ```bash
-windowrulev2 = float, class:nvim-hypr-anywhere
-windowrulev2 = pin, class:nvim-hypr-anywhere
-windowrulev2 = stayfocused, class:nvim-hypr-anywhere
-windowrulev2 = size 70% 70%, class:nvim-hypr-anywhere
+windowrulev2 = float, class:nvim-wl-anywhere
+windowrulev2 = pin, class:nvim-wl-anywhere
+windowrulev2 = stayfocused, class:nvim-wl-anywhere
+windowrulev2 = size 70% 70%, class:nvim-wl-anywhere
 ```
 
 ---
@@ -63,7 +63,7 @@ The script depends on the following commands:
 - `nvim` → Neovim editor  
 - `alacritty` → terminal (or another terminal of your choice)  
 - `wofi` → for selecting a file extension when `--ask-ext` is enabled  
-- `wtype` → for simulating keystrokes (needed for `--wtype-mode`)  
+- `wtype` → for simulating keystrokes (needed for `--keystroke-mode`)  
 - `wl-clipboard` → provides `wl-copy` / `wl-paste` for clipboard support  
 
 Install on Arch-based systems:
