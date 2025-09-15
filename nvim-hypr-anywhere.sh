@@ -2,16 +2,25 @@
 
 set -euo pipefail
 
-TERM_CLASS="nvim-hypr-anywhere"
 ASK_EXT=false
 REMOVE_TMP=false
+WTYPE_MODE=false
+
 FONT_SIZE=25
+TERM_CLASS="nvim-hypr-anywhere"
 TERM="alacritty"
 TERM_OPTS="-o font.size=$FONT_SIZE --class $TERM_CLASS -e"
 TMPFILE_DIR="/tmp/nvim-hypr-anywhere"
 
 check_deps() {
-  for cmd in wtype nvim alacritty wofi; do
+  local deps=("nvim" "alacritty" "wofi")
+
+  # Add wtype only if WTYPE_MODE is enabled
+  if $WTYPE_MODE; then
+    deps+=("wtype")
+  fi
+
+  for cmd in "${deps[@]}"; do
     if ! command -v "$cmd" &>/dev/null; then
       echo "Error: '$cmd' is required but not installed."
       exit 1
@@ -57,6 +66,12 @@ parse_args() {
       REMOVE_TMP=true
       shift
       ;;
+
+    --wtype-mode)
+      WTYPE_MODE=true
+      shift
+      ;;
+
     --font-size)
       if [[ $# -ge 2 && $2 != --* ]]; then
         FONT_SIZE="$2"
@@ -102,6 +117,26 @@ fi
 
 create_tmpfile
 
+if ! $WTYPE_MODE; then
+
+  # get the currently selected and edit it if it's different from the last copy
+  #
+  # so it won't paste the last one if the selected is empty
+  LAST_CLIPBOARD=$(wl-paste)
+
+  hyprctl dispatch sendshortcut "CTRL,C,"
+
+  AFTER_COPY_CLIPBOARD=$(wl-paste)
+
+  if [[ "$LAST_CLIPBOARD" != "$AFTER_COPY_CLIPBOARD" ]]; then
+    wl-paste >"$TMPFILE"
+
+    # put the last one back
+    echo "$LAST_CLIPBOARD" | wl-copy
+  fi
+
+fi
+
 # Launch Neovim in insert mode, auto-quit on write
 $TERM $TERM_OPTS nvim +startinsert +'autocmd BufWritePost <buffer> quit' "$TMPFILE"
 
@@ -109,8 +144,17 @@ TEXT=$(<"$TMPFILE")
 
 # Paste the text if not empty
 if [ -n "$TEXT" ]; then
-  # FIXME: Do shift + return if a new line is detected, was not able to do so
-  printf '%s' "$TEXT" | wtype -
+
+  if $WTYPE_MODE; then
+    # FIXME: Do shift + return if a new line is detected. Was not able to do so
+    printf '%s' "$TEXT" | wtype -
+
+  else
+    cat "$TMPFILE" | wl-copy
+
+    hyprctl dispatch sendshortcut "CTRL,V,"
+  fi
+
 else
   exit 1
 fi
