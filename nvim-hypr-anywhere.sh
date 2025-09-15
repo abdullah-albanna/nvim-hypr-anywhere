@@ -116,9 +116,9 @@ parse_args() {
   done
 }
 
-check_deps
 kill_existing_instance
 parse_args "$@"
+check_deps
 
 # Ask for file extension if requested
 if $ASK_EXT; then
