@@ -1,10 +1,10 @@
-# nvim-hypr-anywhere
+# nvim-wl-anywhere
 
 ![showcase](assets/showcase.gif)
 
-Edit text anywhere on **Wayland** using **Neovim**, then paste it into any text field via **`wtype`** or the system clipboard.  
+Edit text anywhere on **Wayland** using **Neovim**, then paste it into any text field via **`wtype`**
 
-This tool is inspired by [vim-anywhere](https://github.com/cknadler/vim-anywhere), but designed specifically for **Neovim** + **Hyprland**.
+This tool is inspired by [vim-anywhere](https://github.com/cknadler/vim-anywhere), but designed specifically for **Neovim** + **Wayland**.
 
 ---
 
@@ -14,9 +14,9 @@ This tool is inspired by [vim-anywhere](https://github.com/cknadler/vim-anywhere
 - Automatically paste edited text back into the currently focused text field.
 - Supports optional file extensions for syntax highlighting.
 - Can work in two modes:
-  - **Clipboard Mode (default)** → Uses `wl-copy` + `hyprctl` to paste.
-  - **Wtype Mode (`--wtype-mode`)** → Sends keystrokes directly using `wtype` (useful when clipboard-based paste doesn’t work in certain apps).
-- Edits the currently selected text if any (Only in Clipboard Mode)
+  - **Clipboard Mode (default)** → Ctrl + v to paste.
+  - **Keystroke Mode (`--keystroke-mode`)** → Sends keystrokes directly using `wtype` (useful when clipboard-based paste doesn’t work in certain apps).
+- Edits the currently selected text if any (with `--copy-selected`)
 - Cleans up temporary files automatically if requested.
 
 ---
@@ -31,17 +31,17 @@ chmod +x nvim-hypr-anywhere.sh
 
 ---
 
-## Usage
+## Configuration
+
+### Hyprland
 
 Bind the script to a Hyprland key combination (example below with `SUPER+N`):
 
 ```bash
-bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh --font-size 25
+bind = SUPER, N, exec, /path/to/nvim-hypr-anywhere.sh
 ```
 
 ---
-
-## Command-line Options
 
 - `--ask-ext`  
   Prompt for a file extension when creating the temporary buffer. Useful if you want syntax highlighting in Neovim (`.py`, `.rs`, `.md`, etc.).
@@ -52,7 +52,7 @@ bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh --font-size 25
 - `--copy-selected`
   Copy the currently selected text with Ctrl + C and start editing it
 
-- `--wtype-mode`  
+- `--keystroke-mode`  
   Switches from clipboard-paste to **direct keystroke mode** using `wtype`.  
   - Useful in cases where pasting is blocked, unreliable, or when working inside apps that don’t accept clipboard input. (e.g: a Terminal; because they take a CTRL+SHIFT+V)
   - Limitation:
@@ -70,7 +70,7 @@ bind = SUPER, N, exec, uwsm app -- /path/to/nvim-hypr-anywhere.sh --font-size 25
 
 ---
 
-## Hyprland Window Rules (Optional)
+#### Window Rules (Optional)
 
 For a smoother workflow, add window rules to make the editor float and stay focused:
 

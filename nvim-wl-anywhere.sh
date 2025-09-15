@@ -4,25 +4,20 @@ set -euo pipefail
 
 ASK_EXT=false
 REMOVE_TMP=false
-WTYPE_MODE=false
-COPY_SELECTED=true
+KEYSTROKE_MODE=false
+COPY_SELECTED=false
 
 FONT_SIZE=25
-TERM_CLASS="nvim-hypr-anywhere"
+TERM_CLASS="nvim-wl-anywhere"
 TERM="alacritty"
 TERM_OPTS="-o font.size=$FONT_SIZE --class $TERM_CLASS -e"
-TMPFILE_DIR="/tmp/nvim-hypr-anywhere"
+TMPFILE_DIR="/tmp/nvim-wl-anywhere"
 
 check_deps() {
-  local deps=("nvim" "alacritty" "wofi")
+  local deps=("nvim" "alacritty" "wofi" "wtype")
 
-  # Add wtype only if WTYPE_MODE is enabled
-  if $WTYPE_MODE; then
-    deps+=("wtype")
-  fi
-
-  if ! $WTYPE_MODE || $COPY_SELECTED; then
-    deps+=("wl-paste" "wl-copy")
+  if ! $KEYSTROKE_MODE || $COPY_SELECTED; then
+    deps+=("wl-paste")
   fi
 
   for cmd in "${deps[@]}"; do
@@ -59,6 +54,37 @@ create_tmpfile() {
   chmod og-rwx "$TMPFILE"
 }
 
+show_help() {
+  echo "nvim-wl-anywhere <OPTIONS>"
+  echo ""
+  echo ""
+  echo "--ask-ext"
+  echo "  Prompt for a file extension when creating the temporary buffer. Useful if you want syntax highlighting in Neovim (.py, .rs, .md, etc.). "
+  echo ""
+  echo "--rm-tmp"
+  echo "  Automatically delete the temporary file after use instead of leaving it in /tmp/nvim-hypr-anywhere. "
+  echo ""
+  echo "--copy-selected"
+  echo "  Copy the currently selected text with Ctrl + C and start editing it"
+  echo ""
+  echo "--keystroke-mode"
+  echo "  Switches from clipboard-paste to **direct keystroke mode** using wtype."
+  echo "  - Useful in cases where pasting is blocked, unreliable, or when working inside apps that don’t accept clipboard input. (e.g: a Terminal; because they take a CTRL+SHIFT+V) "
+  echo "  - Limitation: "
+  echo "    - Line breaks are not yet handled perfectly (Shift+Enter support is TODO)."
+  echo "    - Slower, since it needs to send keystrokes "
+
+  echo "--font-size <size>"
+  echo "  Set the terminal font size (default: 25)"
+
+  echo "--term <terminal>"
+  echo "  Choose which terminal emulator to launch Neovim in (default: alacritty). "
+
+  echo "--term-opts <opts>"
+  echo "  override terminal options (e.g. window size, class, etc.)."
+  echo ""
+}
+
 parse_args() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -72,8 +98,8 @@ parse_args() {
       shift
       ;;
 
-    --wtype-mode)
-      WTYPE_MODE=true
+    --keystroke-mode)
+      KEYSTROKE_MODE=true
       shift
       ;;
 
@@ -91,6 +117,7 @@ parse_args() {
         exit 1
       fi
       ;;
+
     --term)
       if [[ $# -ge 2 && $2 != --* ]]; then
         TERM="$2"
@@ -100,6 +127,7 @@ parse_args() {
         exit 1
       fi
       ;;
+
     --term-opts)
       TERM_OPTS=""
       shift
@@ -108,8 +136,13 @@ parse_args() {
         shift
       done
       ;;
+
+    --help)
+      show_help
+      ;;
     *)
       echo "Unknown argument: $1"
+      show_help
       exit 1
       ;;
     esac
@@ -134,14 +167,14 @@ if $COPY_SELECTED; then
   # so it won't paste the last one if the selected is empty
   LAST_CLIPBOARD=$(wl-paste)
 
-  hyprctl dispatch sendshortcut "CTRL,C,"
+  wtype -M Ctrl -k c
 
   AFTER_COPY_CLIPBOARD=$(wl-paste)
 
   if [[ "$LAST_CLIPBOARD" != "$AFTER_COPY_CLIPBOARD" ]]; then
     wl-paste >"$TMPFILE"
 
-    # put the last one back
+    # put the last one back incase you copied something you want to paste
     echo "$LAST_CLIPBOARD" | wl-copy
   fi
 
@@ -155,14 +188,14 @@ TEXT=$(<"$TMPFILE")
 # Paste the text if not empty
 if [ -n "$TEXT" ]; then
 
-  if $WTYPE_MODE; then
-    # FIXME: Do shift + return if a new line is detected. Was not able to do so
+  if $KEYSTROKE_MODE; then
+    # FIXME: Do shift + return if a new line is detected to avoid new line as an enter. Was not able to do so
     printf '%s' "$TEXT" | wtype -
 
   else
     cat "$TMPFILE" | wl-copy
 
-    hyprctl dispatch sendshortcut "CTRL,V,"
+    wtype -M Ctrl -k v
   fi
 
 else
