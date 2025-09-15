@@ -167,12 +167,12 @@ if $COPY_SELECTED; then
   # so it won't paste the last one if the selected is empty
   LAST_CLIPBOARD=$(wl-paste)
 
-  wtype -M Ctrl -k c
+  wtype -M Ctrl -k c -m Ctrl
 
   AFTER_COPY_CLIPBOARD=$(wl-paste)
 
   if [[ "$LAST_CLIPBOARD" != "$AFTER_COPY_CLIPBOARD" ]]; then
-    wl-paste >"$TMPFILE"
+    echo "$AFTER_COPY_CLIPBOARD" >"$TMPFILE"
 
     # put the last one back incase you copied something you want to paste
     echo "$LAST_CLIPBOARD" | wl-copy
@@ -195,7 +195,7 @@ if [ -n "$TEXT" ]; then
   else
     cat "$TMPFILE" | wl-copy
 
-    wtype -M Ctrl -k v
+    wtype -M Ctrl -k v -m Ctrl
   fi
 
 else
