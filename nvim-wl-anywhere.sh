@@ -174,9 +174,10 @@ if $COPY_SELECTED; then
   if [[ "$LAST_CLIPBOARD" != "$AFTER_COPY_CLIPBOARD" ]]; then
     echo "$AFTER_COPY_CLIPBOARD" >"$TMPFILE"
 
-    # put the last one back incase you copied something you want to paste
-    echo "$LAST_CLIPBOARD" | wl-copy
   fi
+
+  # put the last one back incase you copied something you want to paste
+  echo "$LAST_CLIPBOARD" | wl-copy
 
 fi
 
