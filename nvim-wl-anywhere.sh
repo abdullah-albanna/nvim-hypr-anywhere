@@ -165,11 +165,11 @@ if $COPY_SELECTED; then
   # get the currently selected and edit it if it's different from the last copy
   #
   # so it won't paste the last one if the selected is empty
-  LAST_CLIPBOARD=$(wl-paste)
+  LAST_CLIPBOARD=$(wl-paste || true)
 
   wtype -M Ctrl -k c -m Ctrl
 
-  AFTER_COPY_CLIPBOARD=$(wl-paste)
+  AFTER_COPY_CLIPBOARD=$(wl-paste || true)
 
   if [[ "$LAST_CLIPBOARD" != "$AFTER_COPY_CLIPBOARD" ]]; then
     echo "$AFTER_COPY_CLIPBOARD" >"$TMPFILE"
