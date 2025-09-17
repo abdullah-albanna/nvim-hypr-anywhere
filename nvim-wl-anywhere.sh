@@ -12,7 +12,6 @@ TERM_CLASS="nvim-wl-anywhere"
 TERM="alacritty"
 TERM_OPTS="-o font.size=$FONT_SIZE --class $TERM_CLASS -e"
 TMPFILE_DIR="/tmp/nvim-wl-anywhere"
-# LAST_TMPFILE="$(find "$TMPFILE_DIR" -type f -printf '%T@ %p\0' | sort -zn | tail -zn1 | cut -zc 23- | xargs --null ls)"
 
 check_deps() {
   local deps=("nvim" "alacritty" "wofi" "wtype")
@@ -169,17 +168,12 @@ if $COPY_SELECTED; then
   SELECTED_TEXT=$(wl-paste -p --no-newline || true)
 
   if [[ "$SELECTED_TEXT" != "$LAST_CLIPBOARD" ]]; then
-    echo "$SELECTED_TEXT" | wl-copy
+    echo -n "$SELECTED_TEXT" | wl-copy -n
     echo "$SELECTED_TEXT" >"$TMPFILE"
-  # elif [[ -n "$LAST_TMPFILE" && "$LAST_TMPFILE" == "$SELECTED_TEXT" ]]; then
-  #   cp "$LAST_TMPFILE" "$TMPFILE"
-  #   REMOVE_TMP=true
-  # else
-  #   echo "" >"$TMPFILE"
   fi
 
   # Restore the clipboard
-  echo "$LAST_CLIPBOARD" | wl-copy
+  echo -n "$LAST_CLIPBOARD" | wl-copy -n
 fi
 
 # Launch Neovim in insert mode, auto-quit on write
