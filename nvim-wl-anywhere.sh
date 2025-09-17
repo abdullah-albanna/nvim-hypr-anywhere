@@ -12,6 +12,7 @@ TERM_CLASS="nvim-wl-anywhere"
 TERM="alacritty"
 TERM_OPTS="-o font.size=$FONT_SIZE --class $TERM_CLASS -e"
 TMPFILE_DIR="/tmp/nvim-wl-anywhere"
+# LAST_TMPFILE="$(find "$TMPFILE_DIR" -type f -printf '%T@ %p\0' | sort -zn | tail -zn1 | cut -zc 23- | xargs --null ls)"
 
 check_deps() {
   local deps=("nvim" "alacritty" "wofi" "wtype")
@@ -161,24 +162,24 @@ fi
 create_tmpfile
 
 if $COPY_SELECTED; then
+  # Save current clipboard state
+  LAST_CLIPBOARD=$(wl-paste --no-newline || true)
 
-  # get the currently selected and edit it if it's different from the last copy
-  #
-  # so it won't paste the last one if the selected is empty
-  LAST_CLIPBOARD=$(wl-paste || true)
+  # Try to grab the primary selection
+  SELECTED_TEXT=$(wl-paste -p --no-newline || true)
 
-  wtype -M Ctrl -k c -m Ctrl
-
-  AFTER_COPY_CLIPBOARD=$(wl-paste || true)
-
-  if [[ "$LAST_CLIPBOARD" != "$AFTER_COPY_CLIPBOARD" ]]; then
-    echo "$AFTER_COPY_CLIPBOARD" >"$TMPFILE"
-
+  if [[ "$SELECTED_TEXT" != "$LAST_CLIPBOARD" ]]; then
+    echo "$SELECTED_TEXT" | wl-copy
+    echo "$SELECTED_TEXT" >"$TMPFILE"
+  # elif [[ -n "$LAST_TMPFILE" && "$LAST_TMPFILE" == "$SELECTED_TEXT" ]]; then
+  #   cp "$LAST_TMPFILE" "$TMPFILE"
+  #   REMOVE_TMP=true
+  # else
+  #   echo "" >"$TMPFILE"
   fi
 
-  # put the last one back incase you copied something you want to paste
+  # Restore the clipboard
   echo "$LAST_CLIPBOARD" | wl-copy
-
 fi
 
 # Launch Neovim in insert mode, auto-quit on write
@@ -194,7 +195,7 @@ if [ -n "$TEXT" ]; then
     printf '%s' "$TEXT" | wtype -
 
   else
-    cat "$TMPFILE" | wl-copy
+    cat "$TMPFILE" | wl-copy -n
 
     wtype -M Ctrl -k v -m Ctrl
   fi
