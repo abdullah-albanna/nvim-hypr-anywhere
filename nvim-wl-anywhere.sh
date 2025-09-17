@@ -195,7 +195,7 @@ if [ -n "$TEXT" ]; then
     printf '%s' "$TEXT" | wtype -
 
   else
-    cat "$TMPFILE" | wl-copy
+    cat "$TMPFILE" | wl-copy -n
 
     wtype -M Ctrl -k v -m Ctrl
   fi
